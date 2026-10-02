@@ -1,0 +1,22 @@
+diff --git a/data/calc_stats_window_data.py b/data/calc_stats_window_data.py
+index 4e7fe44..aeb5ee5 100644
+--- a/data/calc_stats_window_data.py
++++ b/data/calc_stats_window_data.py
+@@ -198,6 +198,8 @@ if __name__ == "__main__":
+         for idx, hap in enumerate(t_geno):
+             s_star_haps.append([v for i, v in enumerate(hap) if i not in pos_to_remove])
+ 
++        curr_mutation_positions_private = [p for i, p in enumerate(curr_mutation_positions) if i not in pos_to_remove]
++
+         print(str(start)+"\t"+str(len(curr_genotypes[0]))+"\t"+str(len(curr_mutation_positions)), file=sys.stderr)
+ 
+         #individual level
+@@ -205,7 +207,7 @@ if __name__ == "__main__":
+             calc_N_ton = N_ton(curr_genotypes, n_samples, focal_idx)
+             dist = distance_vector(curr_genotypes, focal_idx)
+             min_d = [min_dist_ref(curr_genotypes, curr_ref_geno, focal_idx)]
+-            ss = [s_star_ind(np.array(s_star_haps), np.array(curr_mutation_positions), focal_idx)]
++            ss = [s_star_ind(np.array(s_star_haps), np.array(curr_mutation_positions_private), focal_idx)]
+             n_priv = [num_private(np.array(s_star_haps), focal_idx)]
+             output = calc_N_ton + dist + min_d + ss + n_priv + [inds[focal_idx]] + [args.chrom] + [start] + [end] # need to put scalar elements into array to concatenate
+             print(*output, sep="\t") # print stats to standard out

@@ -1,0 +1,13 @@
+# large / generated data
+data/
+results/
+logs/
+archie/ArchIE/
+*.vcf.gz
+*.vcf.gz.tbi
+*.vcf.gz.csi
+*.geno
+*.snp
+*.stats.tsv.gz
+__pycache__/
+Rplots.pdf

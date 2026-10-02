@@ -1,0 +1,8 @@
+# window-stat plots (stage 7)
+name: tspop
+channels: [conda-forge]
+dependencies:
+  - python>=3.8
+  - numpy
+  - pandas
+  - matplotlib

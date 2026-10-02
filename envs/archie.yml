@@ -1,0 +1,11 @@
+# ArchIE feature extraction (stages 5, 6); versions as used in this project
+name: archie
+channels: [conda-forge, defaults]
+dependencies:
+  - python=3.6
+  - numpy=1.19.5
+  - scipy=1.5.4
+  - scikit-learn=0.24.2
+  - conda-forge::r-base
+  - conda-forge::r-data.table
+  - conda-forge::r-bit64

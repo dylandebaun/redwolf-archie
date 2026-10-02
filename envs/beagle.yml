@@ -1,0 +1,5 @@
+# Beagle 5.5 (beagle.27Feb25.75f) for phasing (stage 2)
+name: redwolf
+channels: [conda-forge, bioconda]
+dependencies:
+  - bioconda::beagle=5.5
