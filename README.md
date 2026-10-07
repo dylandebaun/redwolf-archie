@@ -14,6 +14,14 @@ There are two tracks, both driven by one config file (`config/*.yaml`):
   with Beagle, builds the admixed (red wolf) and reference (coyote) panels,
   computes the same features in 50 kb windows, and applies the trained model.
 
+**Updated model track (`simulations/`).** A refit of the simulations to the
+53-genome data, with configs for the 15-wolf panel (`final_53g`) and the 2 SAFE
+wolves (`safe2_53g`): fixed ancestral population size, red wolf 15k → 2k
+100 generations ago, per-window mutation-rate variation, and the real data's
+MAF filter and dog-reference allele coding simulated. See
+[`simulations/README.md`](simulations/README.md); point `model_dir` at its
+output to use it in stage 8. `config/rw_safe2_53g.yaml` already does.
+
 **What the model calls.** The simulation label (`calc_stats_ms_rw.py`) is
 *red-wolf-major ancestry*: a haplotype-window is positive when more than 70% of
 it does not descend from the coyote/donor lineage, and negative below 30%.
@@ -154,6 +162,10 @@ simulations and model.
   simulations are unascertained. Compared with the 63-genome run, median
   private SNPs per window dropped 25 → 20 and S\* 18.0k → 16.2k. Applying the
   same MAF filter to the simulated data would make the training data match.
+- **`size_anc` is ignored by `scripts/sim/ms_templates/*.tmpl`.** They set the
+  ancestral size on pop 1 just before pop 1 joins pop 3, so the root keeps
+  size 1 × Ne (simulations with and without `size_anc` are identical). Kept as
+  is to reproduce the original analysis; `simulations/` uses the corrected model.
 - **chrX** is phased and scored like the autosomes, as in the earlier analysis.
   Males are effectively haploid there.
 

@@ -1,0 +1,53 @@
+# =============================================================================
+# safe2_53g — ArchIE training simulations for the 2 SAFE red wolves
+# (Cru301, Cru792), matched to the real-data config config/rw_safe2_53g.yaml.
+# Identical to final_53g.yaml except the panel and the admixture fraction.
+# Paths are relative to the repository root.
+# =============================================================================
+
+experiment:
+  name: safe2_53g
+real_config: config/rw_safe2_53g.yaml
+out_dir: simulations/results/safe2_53g
+
+sim:
+  ms_bin: archie/ArchIE/msmodified/ms
+  template: simulations/templates/rw_collapse_outgroup.tmpl
+  nreps_train: 10000
+  nreps_test: 1000
+  seed: 1
+  workers: 8
+  N0: 60000
+  mu: 4.0e-9
+  recomb_rate: 8.0e-9
+  theta_gamma_shape: 6
+
+demography:
+  admixture_fraction: 0.11
+  Ne_rw_recent: 2000
+  Ne_rw_hist: 15000
+  Ne_rwextinct: 60
+  Ne_coyote: 60000
+  Ne_anc: 84000
+  Ne_outgroup: 120000
+  t_collapse: 100
+  t_admix: 19
+  t_rwextinct: 19
+  t_rwmerge: 24
+  t_rw_coyote: 18750
+  t_outgroup: 50000
+
+ascertainment:
+  enabled: true
+  panel_rw_haps: 68
+  panel_coyote_haps: 8
+  panel_outgroup_haps: 30
+  min_mac: 2
+  polarize_by_outgroup: true
+
+features:
+  drop_all_derived_bin: true
+
+calibration:
+  target_fpr: [0.01, 0.02, 0.05]
+  include_inbetween: false

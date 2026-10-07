@@ -1,0 +1,66 @@
+# =============================================================================
+# rw_safe2_53g — ArchIE real-data track on the 53-genome dataset.
+# SAFE red wolves only (Cru301, Cru792) as the admixed panel vs. one Alabama
+# coyote (reference panel). Phasing is identical to rw_hist_safe_53g (the 13
+# historical wolves are phased alongside), so stages 0-4 can be skipped by
+# copying results/rw_hist_safe_53g/vcfs/rw_hist_safe_53g_phased_ALL.vcf.gz to
+# results/rw_safe2_53g/vcfs/rw_safe2_53g_phased_ALL.vcf.gz and running
+# STAGES="5 6 7 8". Relative paths are resolved from the repository root.
+# The model for this panel (4 focal haplotypes) comes from
+# simulations/config/safe2_53g.yaml (see simulations/README.md).
+# =============================================================================
+
+experiment:
+  name: rw_safe2_53g              # tags output files and checkpoints
+
+# ---- inputs (edit these for your system) ------------------------------------
+# Stage 0 turns master_vcf_raw (PLINK export) into master_vcf; see
+# scripts/prepare_master_vcf.sh for what is changed and why.
+master_vcf_raw: /mendel-nas1/ddebaun/RedWolf/RedWolfProject_53genomes_geno10_maf1.vcf.gz
+master_vcf: data/RedWolfProject_53genomes_geno10_maf1.canfam31.vcf.gz
+reference_fasta: /mendel-nas1/ddebaun/RedWolf/canfam31_plusY.fa.gz   # canFam3.1, chrNN names
+recomb_map_dir: /mendel-nas1/ddebaun/RedWolf/dog_recomb/beagle_maps  # chr${CHR}.beagle.map (see scripts/make_beagle_maps.sh)
+taxa_dir: taxa
+out_dir: results/rw_safe2_53g
+# simulations, trained model, thresholds (default: <out_dir>/model). To reuse a
+# model trained elsewhere, point this at its directory (needs trained_model.Rdata,
+# sim_meta.json and *thresholds.recommended_by_fpr.tsv).
+model_dir: simulations/results/safe2_53g   # bash simulations/train.sh simulations/config/safe2_53g.yaml
+
+# ---- species panels: subsampled and phased separately, then merged ----------
+species:
+  coyote:  coyote_bama.txt
+  redwolf: rw1975safe.txt
+merge_order: [redwolf, coyote]
+
+# Extra samples used only to improve Beagle phasing of a small panel; they are
+# phased together with the species panel, then dropped before the merge.
+phasing_only_taxa:
+  coyote: coyote.txt
+
+# ---- ArchIE panels -----------------------------------------------------------
+# n_focal_haps = 2 * len(admixed_samples); n_ref_haps = 2 * len(reference_samples)
+admixed_samples:
+  - Cru301
+  - Cru792                        # 2 samples -> n_focal_haps = 4
+reference_samples:
+  - ALcoy                         # 1 sample  -> n_ref_haps = 2
+
+# ---- windowing (must match the simulations the model was trained on) --------
+window_size: 50000
+step: 50000
+
+# Integers are zero-padded (chr01); "X" stays literal (chrX).
+chromosomes: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+              20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36,
+              37, 38, X]
+
+# No sim:/demography:/calibration: blocks here: this panel's model is trained
+# by simulations/ (config simulations/config/safe2_53g.yaml), not scripts/sim/.
+
+# ---- conda environment names (see envs/) ------------------------------------
+conda_envs:
+  bcftools: genome-assembly
+  beagle: redwolf
+  archie: archie
+  plot: tspop

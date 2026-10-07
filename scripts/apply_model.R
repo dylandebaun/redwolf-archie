@@ -68,7 +68,10 @@ fwrite(out, win_out, sep = "\t")
 system2("gzip", c("-f", shQuote(win_out)))
 
 call_cols <- grep("^call_fpr", names(out), value = TRUE)
-per_sample <- out[, c(list(n_windows = .N, mean_prob = mean(prob)), lapply(.SD, mean)),
+# windows with no usable sites have NaN features -> NaN prob; leave them out of
+# the per-sample summary (n_scored = windows that got a probability)
+per_sample <- out[, c(list(n_windows = .N, n_scored = sum(!is.na(prob)), mean_prob = mean(prob, na.rm = TRUE)),
+                      lapply(.SD, mean, na.rm = TRUE)),
                   by = sample, .SDcols = call_cols]
 fwrite(per_sample, paste0(out_prefix, ".per_sample.tsv"), sep = "\t")
 

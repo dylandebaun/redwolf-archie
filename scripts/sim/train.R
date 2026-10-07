@@ -26,6 +26,12 @@ meta <- read_sim_meta(Sys.getenv("SIM_META", "sim_meta.json"))
 
 ARCHAIC_LABEL_COL <- meta$archaic_col      # = 2N + 9
 feature_cols      <- 1:meta$feature_count  # = 1 .. 2N + 8
+# optional (simulations/simulate_archie.py sets it): leave out IFS bin N+1,
+# "derived in all N focal haps" -- no between-haplotype ancestry signal, and the
+# outgroup-polarized sims can't reproduce its real-data count.
+if (isTRUE(as.integer(meta$drop_all_derived_bin) == 1L)) {
+  feature_cols <- setdiff(feature_cols, meta$n_focal_haps + 1)
+}
 
 message(sprintf(
   "From sim_meta.json: n_focal=%d, feature_count=%d, archaic label col=%d, total_cols=%d, model_dir=%s.",

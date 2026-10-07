@@ -11,3 +11,7 @@ archie/ArchIE/
 *.stats.tsv.gz
 __pycache__/
 Rplots.pdf
+.DS_Store
+# ms scratch output if run from the repo root
+out.*
+seedms

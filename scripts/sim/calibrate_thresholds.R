@@ -58,6 +58,12 @@ archaic_col <- meta$archaic_col
 not_archaic_col <- meta$not_archaic_col
 inbetween_col <- meta$inbetween_col
 feature_cols <- 1:meta$feature_count
+# optional (simulations/simulate_archie.py sets it): leave out IFS bin N+1,
+# "derived in all N focal haps" -- no between-haplotype ancestry signal, and the
+# outgroup-polarized sims can't reproduce its real-data count.
+if (isTRUE(as.integer(meta$drop_all_derived_bin) == 1L)) {
+  feature_cols <- setdiff(feature_cols, meta$n_focal_haps + 1)
+}
 
 message(sprintf(
   "From sim_meta.json: n_focal=%d, feature_count=%d, label cols (arch/not/inbtwn)=%d/%d/%d.",
