@@ -43,8 +43,8 @@ uses:
 
 | file | change from upstream |
 |---|---|
-| `data/calc_stats_window_data.py` | S\* is computed on the positions of the reference-filtered sites, so positions and genotypes line up (`patches/calc_stats_window_data.patch`) |
-| `simulations/calc_stats_ms_rw.py` | new: red-wolf-major labels with `--rw-thresh`/`--not-rw-thresh`, the same S\* fix, skips empty replicates (`patches/calc_stats_ms_rw.patch`) |
+| `data/calc_stats_window_data.py` | S\* positions stay aligned with the sites: after the reference filter, and after dropping sites where the focal haplotype is ancestral (`patches/calc_stats_window_data.patch`) |
+| `simulations/calc_stats_ms_rw.py` | new: red-wolf-major labels with `--rw-thresh`/`--not-rw-thresh`, the same two S\* fixes, skips empty replicates (`patches/calc_stats_ms_rw.patch`) |
 | `msmodified/ms` | compiled on Linux from the unmodified upstream source; upstream ships a macOS binary |
 
 Download ArchIE. The patches apply to the pinned commit and reproduce the files exactly.
@@ -155,6 +155,21 @@ To run another panel (e.g. current red wolves), copy the config and change
 simulations and model.
 
 ## Caveats
+
+- **S\* position bug (fixed 2026-10-08; regenerate older outputs).** S\* scoring removes the sites where the focal haplotype carries the ancestral allele from the genotype matrix but, upstream, not from the position list, so every later S\* score used the wrong positions. The error grows with the number of sites the focal haplotype does not carry,
+  so real S\* depended on which other genomes were in the VCF, and simulated
+  S\* on how many haplotypes were simulated. Both patches now keep positions
+  aligned. Real window features (stage 6) and trained models made before this
+  fix used the misaligned S\*; other features are unaffected. To update a run:
+
+  ```bash
+  git pull && bash archie/setup_archie.sh        # re-applies the patches (safe to re-run)
+  rm results/<experiment>/data/window_stats/chr*.stats.tsv.gz
+  sbatch --array=1-39 --export=ALL,CONFIG=config/<experiment>.yaml,STAGES=6 scripts/run_archie_real.sh
+  ```
+
+  then retrain the model (`simulations/train.sh` after re-simulating, or
+  `scripts/sim/submit_model.sh`) and re-run stage 8.
 
 - **Site ascertainment.** The master VCF is filtered to ≤10% missingness and
   MAF ≥ 1% across all 53 genomes, which removes most singletons. The IFS bins,

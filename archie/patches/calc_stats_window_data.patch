@@ -1,8 +1,16 @@
 diff --git a/data/calc_stats_window_data.py b/data/calc_stats_window_data.py
-index 4e7fe44..aeb5ee5 100644
+index 4e7fe44..0d9997f 100644
 --- a/data/calc_stats_window_data.py
 +++ b/data/calc_stats_window_data.py
-@@ -198,6 +198,8 @@ if __name__ == "__main__":
+@@ -75,6 +75,7 @@ def s_star_ind(s, pos, focal_idx):
+ 
+     new_s = np.delete(s, to_remove, axis=1)
+     s = new_s
++    pos = np.delete(pos, to_remove)  # keep positions aligned with the remaining sites
+     nsites = s.shape[1]
+ 
+     if(nsites == 0):
+@@ -198,6 +199,8 @@ if __name__ == "__main__":
          for idx, hap in enumerate(t_geno):
              s_star_haps.append([v for i, v in enumerate(hap) if i not in pos_to_remove])
  
@@ -11,7 +19,7 @@ index 4e7fe44..aeb5ee5 100644
          print(str(start)+"\t"+str(len(curr_genotypes[0]))+"\t"+str(len(curr_mutation_positions)), file=sys.stderr)
  
          #individual level
-@@ -205,7 +207,7 @@ if __name__ == "__main__":
+@@ -205,7 +208,7 @@ if __name__ == "__main__":
              calc_N_ton = N_ton(curr_genotypes, n_samples, focal_idx)
              dist = distance_vector(curr_genotypes, focal_idx)
              min_d = [min_dist_ref(curr_genotypes, curr_ref_geno, focal_idx)]

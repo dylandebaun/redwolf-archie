@@ -1,8 +1,11 @@
 ## Reproducibility checks
 
 - `calc_stats_window_data.py`, `calc_stats_ms_rw.py` and `ms` produced by
-  `setup_archie.sh` match the versions used for the original analysis (files
-  byte-identical; `ms` output identical over 40 replicates).
+  `setup_archie.sh` matched the versions used for the original analysis (files
+  byte-identical; `ms` output identical over 40 replicates). **Since the S\*
+  position fix (2026-10-08) the two Python scripts differ from those versions
+  by one line each, so S\* (and only S\*) differs from the original analysis;
+  see the README caveat.**
 - `render_ms.py` with `config/rw_hist_safe_53g.yaml` reproduces the original
   `ms` command exactly.
 - Retraining with `scripts/sim/train.sh` on the original simulations gives the

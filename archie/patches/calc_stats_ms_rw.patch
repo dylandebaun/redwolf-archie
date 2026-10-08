@@ -1,9 +1,9 @@
 diff --git a/simulations/calc_stats_ms_rw.py b/simulations/calc_stats_ms_rw.py
 new file mode 100644
-index 0000000..312f775
+index 0000000..481cf09
 --- /dev/null
 +++ b/simulations/calc_stats_ms_rw.py
-@@ -0,0 +1,253 @@
+@@ -0,0 +1,254 @@
 +import argparse
 +import sys
 +import math
@@ -84,6 +84,7 @@ index 0000000..312f775
 +
 +    new_s = np.delete(s, to_remove, axis=1)
 +    s = new_s
++    pos = np.delete(pos, to_remove)  # keep positions aligned with the remaining sites
 +    nsites = s.shape[1]
 +
 +    if nsites == 0:

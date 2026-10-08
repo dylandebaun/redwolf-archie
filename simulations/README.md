@@ -146,12 +146,14 @@ how the real data were coded (next section). No gray-wolf ancestry is simulated.
    allele. Labels come from the true ancestry track, so the recoding changes the
    features but not the truth.
 
-The real VCF is also filtered to MAF ≥ 1 % across all 53 genomes. Simulating
-that filter (a 106-haplotype panel, keeping sites with minor-allele count ≥ 2)
-was tested and left out: with everything else in place it improved the fit
-only slightly (final mean KS 0.065 → 0.052, adversarial AUC 0.848 → 0.834,
-within seed noise; safe2 unchanged at 0.125 → 0.121), and it would triple the
-number of simulated haplotypes.
+Each replicate simulates exactly what ArchIE needs: the focal haplotypes, the
+reference coyote haplotypes, the one-haplotype red-wolf ghost, plus the single
+reference-genome haplotype used for the coding above. The real VCF also holds
+sites that vary only in the other genomes of the 53-genome set and is filtered
+to MAF ≥ 1 % across them. Neither is simulated: those genomes are not a clean
+outgroup (most of the 12 LSU museum samples are red wolves or red wolf hybrids),
+and with the S\* position fix (below) sites the focal haplotypes don't vary at
+no longer change any feature.
 
 ## Dropped feature
 
@@ -169,14 +171,18 @@ mismatch (L1 0.32 → 0.14 for final, 0.22 → 0.09 for safe2).
 Real = autosomal windows from stage 6 of the 53-genome data. Lower is better
 for every number; adversarial AUC = how well a classifier separates simulated
 from real windows (0.5 = indistinguishable; one haplotype per window, matched
-window counts, 3 seeds). "This model" values are from 400 (final) / 1,000
-(safe2) test replicates of the current settings.
+window counts, 3 seeds). safe2: full run (10,000 training windows) against real
+features recomputed with the S\* fix. final: pending the stage 6 re-run with the
+fix; the value shown is from the run before the fix (S\* misaligned on both
+sides).
 
 | | final: previous model | final: this model | safe2: previous | safe2: this model |
 |---|---|---|---|---|
-| mean KS, 7 summary features | 0.200 | 0.065 | 0.240 | 0.125 |
-| frequency-spectrum L1 (bin dropped) | 0.136 | 0.18 | 0.116 | 0.05 |
-| adversarial AUC, all features (bin dropped) | 0.93 | 0.85 | 0.94 | 0.84 |
+| mean KS, 7 summary features | 0.200 | (0.048, pre-fix) | 0.240 | 0.119 |
+| S\* KS | 0.169 | (0.045, pre-fix) | 0.241 | 0.107 |
+| frequency-spectrum L1 (bin dropped) | 0.136 | (0.166, pre-fix) | 0.116 | 0.057 |
+| adversarial AUC, all features (bin dropped) | 0.93 | (0.88, pre-fix) | 0.94 | 0.815 |
+| model test AUC (simulated test set) | | (0.961, pre-fix) | | 0.958 |
 
 "Previous model" = the models used in the original analysis
 (`rw_3pop_collapse.tmpl`, historical 10k → recent 5k at 100 generations), run
@@ -195,6 +201,14 @@ All fits were scored against the real autosomal windows of both panels.
   is now set on pop 3 after the join. With the fix the simulations gain ~45 %
   more segregating sites, which closes most of the diversity gap that the old
   model had (real windows had ~25–30 % more pairwise diversity).
+- **S\* position bug (fixed in both ArchIE patches).** S\* scoring dropped the
+  sites where the focal haplotype is ancestral from the genotypes but not from
+  the positions. It surfaced because simulated S\* changed with the number of
+  simulated haplotypes (safe2 median 69k with 8 haplotypes vs 47k with 107)
+  although the genealogy of the focal haplotypes doesn't; with the fix both give
+  ~90k. All fits above that involve S\*, and the earlier comparisons of a
+  simulated MAF filter / ascertainment panel, were made with the bug; the real
+  safe2 S\* median moves from 39k to 70k with the fix.
 - **Mutation rate × 1.35 or all sizes × 1.35** fit well only under the bug
   (they were compensating for it); with the fixed template both overshoot.
 - **Ancestral size**: 1.66 × N0 overshoots divergence from the coyote; 1.4 fits
@@ -210,10 +224,13 @@ All fits were scored against the real autosomal windows of both panels.
   dropping the all-derived bin.
 - **Gray-wolf ancestry pulse into red wolves**: reproduced the top of the
   spectrum but is not in this model by choice.
-- **MAF ≥ 1 % filter** (simulated over a 106-haplotype panel): small effect
-  once the demography is fixed (see "Matching how the real data were
-  produced"), so not included. Turning off the dog-reference coding as well
-  mainly worsens S\* for the 15-wolf panel (KS 0.09 → 0.14).
+- **MAF ≥ 1 % filter / 53-genome ascertainment panel**: tested (before the S\*
+  fix) with a simulated 106-haplotype panel; small effect on everything except
+  S\*, and the S\* effect turned out to come from the position bug. Not
+  included: the extra genomes aren't a clean outgroup and, with the fix, sites
+  the focal haplotypes don't vary at don't change the features. Turning off the
+  dog-reference coding mainly worsens S\* for the 15-wolf panel (KS 0.09 → 0.14,
+  pre-fix).
 - **Phasing switch errors / genotype errors** added to the simulated haplotypes:
   they matched the real rate of identical haplotypes but made every other
   measure worse or no better, so they are not included.
