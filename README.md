@@ -18,7 +18,7 @@ There are two tracks, both driven by one config file (`config/*.yaml`):
 53-genome data, with configs for the 15-wolf panel (`final_53g`) and the 2 SAFE
 wolves (`safe2_53g`): fixed ancestral population size, red wolf 15k → 2k
 100 generations ago, per-window mutation-rate variation, and the real data's
-MAF filter and dog-reference allele coding simulated. See
+dog-reference allele coding simulated. See
 [`simulations/README.md`](simulations/README.md); point `model_dir` at its
 output to use it in stage 8. `config/rw_safe2_53g.yaml` already does.
 
@@ -160,8 +160,9 @@ simulations and model.
   MAF ≥ 1% across all 53 genomes, which removes most singletons. The IFS bins,
   S\* and private-SNP counts are sensitive to rare variants, and the `ms`
   simulations are unascertained. Compared with the 63-genome run, median
-  private SNPs per window dropped 25 → 20 and S\* 18.0k → 16.2k. Applying the
-  same MAF filter to the simulated data would make the training data match.
+  private SNPs per window dropped 25 → 20 and S\* 18.0k → 16.2k. In
+  `simulations/`, simulating the same filter changed the fit only slightly once
+  the demography was refit, so it is not applied (see `simulations/README.md`).
 - **`size_anc` is ignored by `scripts/sim/ms_templates/*.tmpl`.** They set the
   ancestral size on pop 1 just before pop 1 joins pop 3, so the root keeps
   size 1 × Ne (simulations with and without `size_anc` are identical). Kept as

@@ -37,13 +37,8 @@ demography:
   t_rw_coyote: 18750
   t_outgroup: 50000
 
-ascertainment:
-  enabled: true
-  panel_rw_haps: 68
-  panel_coyote_haps: 8
-  panel_outgroup_haps: 30
-  min_mac: 2
-  polarize_by_outgroup: true
+polarization:              # mimic how the real data are coded
+  by_outgroup: true        # 0 = allele of the simulated outgroup hap (stand-in for the canFam3.1 boxer)
 
 features:
   drop_all_derived_bin: true

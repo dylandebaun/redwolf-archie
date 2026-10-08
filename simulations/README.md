@@ -7,8 +7,8 @@ window features.
 
 This replaces the model track in `scripts/sim/` for the 53-genome panels. It
 fixes a bug in that track's templates (the ancestral population size was never
-applied), refits the demography to the 53-genome data, and simulates the same
-ascertainment and allele coding as the real VCF. The model fit and threshold
+applied), refits the demography to the 53-genome data, and codes alleles the
+same way as the real VCF (0 = dog reference allele). The model fit and threshold
 calibration reuse `scripts/sim/train.R` and `scripts/sim/calibrate_thresholds.R`.
 
 Two models, one per real-data panel:
@@ -20,7 +20,7 @@ Two models, one per real-data panel:
 
 The sample lists and window size are read from the real-data config, so the
 number of focal haplotypes always matches the real features. Everything else
-(demography, rate variation, ascertainment) is shared by both models.
+(demography, rate variation, allele coding) is shared by both models.
 
 ## Quick start
 
@@ -140,16 +140,18 @@ how the real data were coded (next section). No gray-wolf ancestry is simulated.
    (4·N0·μ·L = 48) times a Gamma(6, 1/6) draw (CV ≈ 0.4). Real windows vary in
    mutation rate and callable sites; with a constant θ the simulated feature
    distributions were too narrow. Shape 6 fit better than 4 or 8.
-2. **Ascertainment.** The real VCF keeps sites with MAF ≥ 1 % across 53
-   genomes. Each replicate simulates a 106-haplotype panel (68 red-wolf
-   lineage, 8 coyote, 30 outgroup) and keeps sites with minor-allele count ≥ 2;
-   features then use only the first N red-wolf and first 2 coyote haps.
-3. **Polarization.** In the real data, 0 = the canFam3.1 (boxer) allele, not the
-   ancestral allele. The simulations recode each site so that 0 = the allele of
-   the first outgroup haplotype.
+2. **Polarization.** In the real data, 0 = the canFam3.1 (boxer) allele, not the
+   ancestral allele. Each replicate simulates one outgroup haplotype as the
+   stand-in for the reference genome and recodes each site so that 0 = its
+   allele. Labels come from the true ancestry track, so the recoding changes the
+   features but not the truth.
 
-Labels are computed from the true ancestry track on **all** simulated sites
-before filtering, so ascertainment changes the features but not the truth.
+The real VCF is also filtered to MAF ≥ 1 % across all 53 genomes. Simulating
+that filter (a 106-haplotype panel, keeping sites with minor-allele count ≥ 2)
+was tested and left out: with everything else in place it improved the fit
+only slightly (final mean KS 0.065 → 0.052, adversarial AUC 0.848 → 0.834,
+within seed noise; safe2 unchanged at 0.125 → 0.121), and it would triple the
+number of simulated haplotypes.
 
 ## Dropped feature
 
@@ -167,13 +169,14 @@ mismatch (L1 0.32 → 0.14 for final, 0.22 → 0.09 for safe2).
 Real = autosomal windows from stage 6 of the 53-genome data. Lower is better
 for every number; adversarial AUC = how well a classifier separates simulated
 from real windows (0.5 = indistinguishable; one haplotype per window, matched
-window counts, 3 seeds).
+window counts, 3 seeds). "This model" values are from 400 (final) / 1,000
+(safe2) test replicates of the current settings.
 
 | | final: previous model | final: this model | safe2: previous | safe2: this model |
 |---|---|---|---|---|
-| mean KS, 7 summary features | 0.200 | 0.05 | 0.240 | 0.12 |
-| frequency-spectrum L1 (bin dropped) | 0.136 | 0.17 | 0.116 | 0.06 |
-| adversarial AUC, all features (bin dropped) | 0.93 | 0.84 | 0.94 | 0.83 |
+| mean KS, 7 summary features | 0.200 | 0.065 | 0.240 | 0.125 |
+| frequency-spectrum L1 (bin dropped) | 0.136 | 0.18 | 0.116 | 0.05 |
+| adversarial AUC, all features (bin dropped) | 0.93 | 0.85 | 0.94 | 0.84 |
 
 "Previous model" = the models used in the original analysis
 (`rw_3pop_collapse.tmpl`, historical 10k → recent 5k at 100 generations), run
@@ -207,6 +210,10 @@ All fits were scored against the real autosomal windows of both panels.
   dropping the all-derived bin.
 - **Gray-wolf ancestry pulse into red wolves**: reproduced the top of the
   spectrum but is not in this model by choice.
+- **MAF ≥ 1 % filter** (simulated over a 106-haplotype panel): small effect
+  once the demography is fixed (see "Matching how the real data were
+  produced"), so not included. Turning off the dog-reference coding as well
+  mainly worsens S\* for the 15-wolf panel (KS 0.09 → 0.14).
 - **Phasing switch errors / genotype errors** added to the simulated haplotypes:
   they matched the real rate of identical haplotypes but made every other
   measure worse or no better, so they are not included.
@@ -232,7 +239,7 @@ All fits were scored against the real autosomal windows of both panels.
 
 | file | role |
 |---|---|
-| `config/*.yaml` | demography, simulation and ascertainment settings per model |
+| `config/*.yaml` | demography, simulation and polarization settings per model |
 | `templates/rw_collapse_outgroup.tmpl` | `ms` command template |
 | `simulate_archie.py` | `meta` (writes `sim_meta.json`) and `run` (simulates a train/test set); uses ArchIE's `simulations/calc_stats_ms_rw.py` from `archie/setup_archie.sh` |
 | `train.sh` | runs `scripts/sim/train.R` + `scripts/sim/calibrate_thresholds.R` on a config's output |

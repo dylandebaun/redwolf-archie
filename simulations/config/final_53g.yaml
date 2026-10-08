@@ -29,7 +29,7 @@ demography:                # sizes in individuals, times in generations before p
   Ne_rwextinct: 60         # unadmixed "extinct" red-wolf ghost lineage (1 sampled hap)
   Ne_coyote: 60000         # = N0
   Ne_anc: 84000            # red wolf + coyote ancestor (and root after the outgroup joins)
-  Ne_outgroup: 120000      # dog/wolf lineage; vonHoldt 2016 fig. S5 model 1 theta_NA_WOLF_ANC
+  Ne_outgroup: 120000      # dog/wolf lineage (1 sampled hap); vonHoldt 2016 fig. S5 model 1 theta_NA_WOLF_ANC
   t_collapse: 100
   t_admix: 19
   t_rwextinct: 19
@@ -37,13 +37,8 @@ demography:                # sizes in individuals, times in generations before p
   t_rw_coyote: 18750
   t_outgroup: 50000        # coyote vs wolf/dog split, ~150 kya at 3 yr/gen (fig. S5 tau_COY_ANC)
 
-ascertainment:             # mimic how the real VCF was produced
-  enabled: true
-  panel_rw_haps: 68        # rw-lineage haps in the simulated 53-genome panel (incl. the focal ones)
-  panel_coyote_haps: 8     # coyote haps (incl. the 2 reference haps)
-  panel_outgroup_haps: 30  # dog/wolf haps
-  min_mac: 2               # MAF >= 1% of 106 haps
-  polarize_by_outgroup: true   # 0 = allele of the first outgroup hap (stands in for the canFam3.1 boxer)
+polarization:              # mimic how the real data are coded
+  by_outgroup: true        # 0 = allele of the simulated outgroup hap (stand-in for the canFam3.1 boxer)
 
 features:
   drop_all_derived_bin: true   # exclude IFS bin "derived in all n focal haps" from the classifier

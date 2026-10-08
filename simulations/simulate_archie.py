@@ -9,15 +9,15 @@ simulate_archie.py — ArchIE training/test simulations for the red-wolf panels.
 Run from the repository root. Each replicate is one 50 kb window:
 
   1. draw this window's theta = 4*N0*mu*L * Gamma(k, 1/k)          (rate variation)
-  2. run the modified ms (templates/rw_collapse_outgroup.tmpl): red wolf (pop 1),
-     red-wolf ghost (2), coyote (3), dog/wolf outgroup (4)
+  2. run the modified ms (templates/rw_collapse_outgroup.tmpl): the focal red
+     wolf haps (pop 1), the red-wolf ghost (2), the reference coyote haps (3)
+     and one dog/wolf outgroup hap (4)
   3. labels: red-wolf-major ancestry of each focal hap from the TRUE ancestry
-     track (out.ADMIXED.anc) on all sites, as in calc_stats_ms_rw.py
-  4. ascertainment: keep sites with MAC >= min_mac across the whole simulated
-     panel (rw + coyote + outgroup haps), then recode 0/1 so that 0 = allele of
-     the first outgroup hap (the stand-in for the canFam3.1 reference)
-  5. features: calc_stats_ms_rw.py feature functions on the first n_focal rw
-     haps and the first n_ref coyote haps
+     track (out.ADMIXED.anc), as in calc_stats_ms_rw.py
+  4. polarization: recode 0/1 so that 0 = the outgroup hap's allele, as the
+     real data are coded against the canFam3.1 (boxer) reference
+  5. features: calc_stats_ms_rw.py feature functions on the focal and
+     reference haps
 
 Output rows have the same layout as the old create_sims.sh output
 (2N+8 features, 3 one-hot labels, prop red-wolf), so train.R and
@@ -66,9 +66,6 @@ def load_config(path):
     cfg["sim"]["template"] = os.path.abspath(cfg["sim"]["template"])
     if not os.access(cfg["sim"]["ms_bin"], os.X_OK):
         sys.exit("ms binary not found/executable: %s (see simulations/README.md)" % cfg["sim"]["ms_bin"])
-    asc = cfg["ascertainment"]
-    if asc["panel_rw_haps"] < cfg["n_focal"] or asc["panel_coyote_haps"] < cfg["n_ref"]:
-        sys.exit("ascertainment panel must be at least as large as the focal / reference panels")
     return cfg
 
 
@@ -94,13 +91,13 @@ def sim_meta(cfg):
 
 def render_template(cfg, theta):
     """ms command for one replicate; sizes -> units of N0, times -> units of 4*N0 gens."""
-    s, d, a = cfg["sim"], cfg["demography"], cfg["ascertainment"]
+    s, d = cfg["sim"], cfg["demography"]
     n0, L = float(s["N0"]), cfg["window_size"]
     g = lambda t: float(t) / (4 * n0)
     sz = lambda ne: float(ne) / n0
     with open(s["template"]) as fh:
         tmpl = fh.read().strip()
-    n_rw, n_coy, n_out = a["panel_rw_haps"], a["panel_coyote_haps"], a["panel_outgroup_haps"]
+    n_rw, n_coy, n_out = cfg["n_focal"], cfg["n_ref"], 1      # one outgroup hap = the "reference genome"
     vals = {
         "MS_BIN": s["ms_bin"], "N_TOTAL": n_rw + 1 + n_coy + n_out, "L": L,
         "THETA": theta, "RHO": 4 * n0 * float(s["recomb_rate"]) * L,
@@ -133,7 +130,7 @@ def read_geno(path):
 
 def one_replicate(job):
     rep, cfg, set_offset, workdir = job
-    s, a = cfg["sim"], cfg["ascertainment"]
+    s = cfg["sim"]
     rng = np.random.default_rng([int(s["seed"]), set_offset, rep])
     L = cfg["window_size"]
     theta = 4 * float(s["N0"]) * float(s["mu"]) * L
@@ -158,22 +155,13 @@ def one_replicate(job):
 
     if rw.shape[0] == 0:
         return []
-    # labels from the true ancestry on all simulated sites
+    # labels from the true ancestry track
     labels = [calc.label_rw_major([row[i] for row in anc], list(pos_all), L, 0.7, 0.3) for i in range(n)]
 
-    keep = np.ones(rw.shape[0], dtype=bool)
-    if a["enabled"]:
-        mac = rw.sum(1) + coy.sum(1) + out.sum(1)
-        tot = rw.shape[1] + coy.shape[1] + out.shape[1]
-        keep = (mac >= a["min_mac"]) & (mac <= tot - a["min_mac"])
-        if a["polarize_by_outgroup"]:
-            flip = (out[:, 0] == 1)[:, None]
-            rw, coy = np.where(flip, 1 - rw, rw), np.where(flip, 1 - coy, coy)
-    adm = rw[keep][:, :n]
-    ref = coy[keep][:, :n_ref]
-    pos = pos_all[keep]
-    if adm.shape[0] == 0:
-        return []
+    if cfg["polarization"]["by_outgroup"]:
+        flip = (out[:, 0] == 1)[:, None]          # the "reference genome" carries the derived allele
+        rw, coy = np.where(flip, 1 - rw, rw), np.where(flip, 1 - coy, coy)
+    adm, ref, pos = rw, coy, pos_all
 
     genotypes, ref_geno = adm.tolist(), ref.tolist()
     priv = ref.sum(1) == 0                     # sites not carried by any reference hap (S*, private)
