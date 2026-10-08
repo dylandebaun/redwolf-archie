@@ -31,7 +31,7 @@ Run everything from the repository root.
 # and its modified ms, which tracks introgressed ancestry
 bash archie/setup_archie.sh
 
-# Python: numpy, scipy, scikit-learn, pyyaml (+ pandas for check_fit.py)
+# Python: numpy, scipy, scikit-learn, pyyaml (+ pandas, matplotlib for check_fit.py)
 # R: data.table, jsonlite
 
 CFG=simulations/config/final_53g.yaml            # or safe2_53g.yaml
@@ -41,6 +41,7 @@ bash simulations/train.sh $CFG                    # train.R + calibrate_threshol
 
 # optional: how closely do the simulated features match the real ones?
 python3 simulations/check_fit.py --config $CFG --real results/rw_hist_safe_53g/data/window_stats
+#   -> <out_dir>/fit/: fit_summary.txt, train_vs_real_*.tsv and plots, adversarial_auc.tsv
 #   (use results/rw_safe2_53g/data/window_stats for safe2_53g)
 ```
 
@@ -260,4 +261,4 @@ All fits were scored against the real autosomal windows of both panels.
 | `templates/rw_collapse_outgroup.tmpl` | `ms` command template |
 | `simulate_archie.py` | `meta` (writes `sim_meta.json`) and `run` (simulates a train/test set); uses ArchIE's `simulations/calc_stats_ms_rw.py` from `archie/setup_archie.sh` |
 | `train.sh` | runs `scripts/sim/train.R` + `scripts/sim/calibrate_thresholds.R` on a config's output |
-| `check_fit.py` | simulated vs real feature comparison (KS, spectrum, adversarial AUC) |
+| `check_fit.py` | simulated vs real feature comparison (KS, spectrum, adversarial AUC); writes tables and plots to `<out_dir>/fit/` |
