@@ -1,7 +1,17 @@
 # large / generated data
 data/
-results/
 logs/
+# results: keep only the ArchIE calls and model-fit summaries; trained models,
+# simulated training/test data, IBDmix and phasing outputs are large and
+# reproducible from the configs
+results/*
+!results/rw_*_53g/
+results/rw_*_53g/*
+!results/rw_*_53g/calls/
+simulations/results/*/*
+!simulations/results/*/fit/
+!simulations/results/*/thresholds.*.tsv
+!simulations/results/*/sim_meta.json
 archie/ArchIE/
 *.vcf.gz
 *.vcf.gz.tbi

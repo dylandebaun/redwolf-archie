@@ -1,0 +1,12 @@
+diff --git a/msmodified/ms.c b/msmodified/ms.c
+index 1f22319..a828397 100644
+--- a/msmodified/ms.c
++++ b/msmodified/ms.c
+@@ -382,6 +382,7 @@ main(argc,argv)
+         fclose (f4[i]);
+     }
+     // ramcode
++    return 0;   /* K&R main: without this, gnu89 builds exit with an undefined status */
+ }
+ 
+ 

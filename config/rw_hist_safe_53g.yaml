@@ -19,7 +19,7 @@ out_dir: results/rw_hist_safe_53g
 # simulations, trained model, thresholds (default: <out_dir>/model). To reuse a
 # model trained elsewhere, point this at its directory (needs trained_model.Rdata,
 # sim_meta.json and *thresholds.recommended_by_fpr.tsv).
-model_dir: results/rw_hist_safe_53g/model
+model_dir: simulations/results/final_53g   # bash simulations/train.sh simulations/config/final_53g.yaml (was results/rw_hist_safe_53g/model, the old scripts/sim track)
 
 # ---- species panels: subsampled and phased separately, then merged ----------
 species:

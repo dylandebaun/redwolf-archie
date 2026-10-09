@@ -1,0 +1,15 @@
+{
+  "n_focal_haps": 10,
+  "n_ref_haps": 2,
+  "window_size": 50000,
+  "nreps_train": 10000,
+  "nreps_test": 1000,
+  "feature_count": 28,
+  "archaic_col": 29,
+  "not_archaic_col": 30,
+  "inbetween_col": 31,
+  "prop_archaic_col": 32,
+  "total_cols": 32,
+  "drop_all_derived_bin": 1,
+  "model_dir": "simulations/results/museum_early_53g"
+}

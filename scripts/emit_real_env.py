@@ -36,8 +36,9 @@ def main():
     with open(args.config) as fh:
         cfg = yaml.safe_load(fh)
 
-    admixed = cfg["admixed_samples"]
-    reference = cfg["reference_samples"]
+    # str(): YAML reads numeric IDs (e.g. museum catalogue numbers) as integers
+    admixed = [str(x) for x in cfg["admixed_samples"]]
+    reference = [str(x) for x in cfg["reference_samples"]]
     n_focal = 2 * len(admixed)
     n_ref = 2 * len(reference)
 
