@@ -6,7 +6,7 @@ This file summarises the ArchIE runs and what they found; methods are in
 
 **Contents**
 1. Data
-2. ArchIE models and calls (historical, museum early, museum late)
+2. ArchIE models and calls (historical, SAFE only, museum early, museum late)
 3. Museum samples: quality control and panel choice
 4. Open issues and next steps
 5. Files
@@ -55,10 +55,11 @@ lineage. "Called" below means called red wolf.
 | panel | focal samples | haplotypes | sim config | time shift |
 |---|---|---|---|---|
 | historical | 13 historical (1975) + Cru301, Cru792 (SAFE) | 30 | `final_53g` | 0 (model time 0 = 1975) |
+| SAFE only | Cru301, Cru792 (SAFE) | 4 | `safe2_53g` | 0 |
 | museum early | 1022, 1023, 1024, 1025 (1935) + 7006 (1956) | 10 | `museum_early_53g` | 8.95 generations |
 | museum late | 13750, 15308 (1965–66), 17018, 17033, 17679 (1971–73), 20904 (1979) | 12 | `museum_late_53g` | 1.0 generation |
 
-- **Reference panel:** ALcoy (2 haplotypes) for all three.
+- **Reference panel:** ALcoy (2 haplotypes) for all four.
 - **Simulation set-up:** `simulations/README.md`. Red wolf Ne 15,000
   collapsing to 2,000 at 100 generations; ancestor 84,000; red wolf/coyote
   split at 18,750 generations; a dog/wolf outgroup haplotype used only to code
@@ -66,23 +67,28 @@ lineage. "Called" below means called red wolf.
   (Gamma(6)); no MAF ascertainment; the "derived in all focal haplotypes"
   bin dropped from the classifier.
 - **Admixture:** coyote fraction 0.48 at 19 generations before 1975 (≈ 1900,
-  4-year generations) for all three. 0.48 is the published estimate for the
-  historical panel and **a placeholder for the museum panels**.
+  4-year generations) for the historical and museum panels. 0.48 is the
+  published estimate for the historical panel and **a placeholder for the
+  museum panels**. The SAFE-only model uses 0.11, as in the earlier SAFE-only
+  analysis (`rw_safe2_11pct`), with the same timing.
+- **SAFE-only real data:** phasing is shared with the historical panel (the 13
+  historical wolves are phased alongside); only the panel split and features
+  (stages 5–6) differ.
 - **Museum time shifts:** every event time is moved closer by
   (1975 − mean collection year) / 4.
 - **Data:** 10,000 training and 1,000 test windows per model.
 
 ### Model performance and fit to the real data
 
-| | historical | museum early | museum late |
-|---|---|---|---|
-| model AUC (simulated test data) | 0.961 | 0.917 | 0.923 |
-| best F1 (threshold) | 0.900 (0.478) | 0.843 (0.410) | 0.851 (0.444) |
-| threshold / recall at 5% FPR | 0.671 / 0.82 | 0.758 / 0.65 | 0.752 / 0.67 |
-| fit to real data: mean KS (7 summary features) | 0.060 | 0.097 | 0.073 |
-| frequency-spectrum L1 (all-derived bin dropped) | 0.166 | 0.096 | 0.160 |
-| adversarial AUC: summary / distance vector / all | 0.79 / 0.73 / 0.88 | 0.76 / 0.68 / 0.84 | 0.77 / 0.71 / 0.88 |
-| windows called red wolf (5% FPR) | 33–60% | 44–60% | 27–62% |
+| | historical | SAFE only | museum early | museum late |
+|---|---|---|---|---|
+| model AUC (simulated test data) | 0.961 | 0.958 | 0.917 | 0.923 |
+| best F1 (threshold) | 0.900 (0.478) | 0.966 (0.468) | 0.843 (0.410) | 0.851 (0.444) |
+| threshold / recall at 5% FPR | 0.671 / 0.82 | 0.940 / 0.80 | 0.758 / 0.65 | 0.752 / 0.67 |
+| fit to real data: mean KS (7 summary features) | 0.060 | 0.119 | 0.097 | 0.073 |
+| frequency-spectrum L1 (all-derived bin dropped) | 0.166 | 0.057 | 0.096 | 0.160 |
+| adversarial AUC: summary / distance vector / all | 0.79 / 0.73 / 0.88 | 0.79 / 0.68 / 0.82 | 0.76 / 0.68 / 0.84 | 0.77 / 0.71 / 0.88 |
+| windows called red wolf (5% FPR) | 33–60% | 57–59% | 44–60% | 27–62% |
 
 Fit plots and tables: `simulations/results/<model>/fit/`.
 
@@ -95,21 +101,27 @@ Fit plots and tables: `simulations/results/<model>/fit/`.
   - the MAF filter and missing C>T/G>A sites, which the simulations don't
     mimic;
   - for the late panel, relatedness among the SAFE-like wolves.
+- **SAFE only:** the frequency spectrum fits best of the four panels, but the
+  haplotype-distance variance and skew fit worst (KS 0.16 and 0.20). With only
+  two wolves, the many near-identical haplotype pairs within each animal
+  (runs of homozygosity in the captive population) dominate those features,
+  and a random-mating model doesn't produce them. The real data also have
+  more windows with S\* near 0 than the simulations.
 - **Overall:** simulated and real windows remain distinguishable (adversarial
-  AUC 0.84–0.88), as in the README's earlier assessment.
+  AUC 0.82–0.88), as in the README's earlier assessment.
 
 ### Called red wolf ancestry per individual (fraction of haplotype-windows, 5% FPR)
 
-| historical | | museum early | | museum late | |
-|---|---|---|---|---|---|
-| Cru792 | 0.60 | 1023 | 0.60 | 17679 | 0.62 |
-| Cru301 | 0.58 | 1022 | 0.58 | 17018 | 0.61 |
-| CL5480 | 0.57 | 7006 | 0.48 | 17033 | 0.52 |
-| rw75114 | 0.51 | 1025 | 0.48 | 20904 | 0.33 |
-| CL5487, rw76047 | 0.46 | 1024 | 0.44 | 13750 | 0.27 |
-| rw75157, CL5485, rw75092, rw75014 | 0.41–0.43 | | | 15308 | 0.27 |
-| rw75154, rw75032, rw76046, CL5494 | 0.38–0.39 | | | | |
-| CL5479 | 0.33 | | | | |
+| historical | | SAFE only | | museum early | | museum late | |
+|---|---|---|---|---|---|---|---|
+| Cru792 | 0.60 | Cru792 | 0.59 | 1023 | 0.60 | 17679 | 0.62 |
+| Cru301 | 0.58 | Cru301 | 0.57 | 1022 | 0.58 | 17018 | 0.61 |
+| CL5480 | 0.57 | | | 7006 | 0.48 | 17033 | 0.52 |
+| rw75114 | 0.51 | | | 1025 | 0.48 | 20904 | 0.33 |
+| CL5487, rw76047 | 0.46 | | | 1024 | 0.44 | 13750 | 0.27 |
+| rw75157, CL5485, rw75092, rw75014 | 0.41–0.43 | | | | | 15308 | 0.27 |
+| rw75154, rw75032, rw76046, CL5494 | 0.38–0.39 | | | | | | |
+| CL5479 | 0.33 | | | | | | |
 
 Calls: `results/rw_<panel>_53g/calls/` (per window and per sample).
 
@@ -118,6 +130,10 @@ Calls: `results/rw_<panel>_53g/calls/` (per window and per sample).
   17018, 17033 and 17679 (the samples closest to SAFE genetically and by
   mitogenome) have the most. The catalogued RW × coyote specimens 13750 and
   15308 have the least of any animal.
+- **SAFE wolves agree across models.** Scored by the SAFE-only model (4
+  haplotypes, admixture 0.11), Cru301 and Cru792 get 0.57 and 0.59; scored
+  within the 15-wolf historical model (30 haplotypes, admixture 0.48), 0.58
+  and 0.60.
 - **Not directly comparable across panels.** Each panel has its own model and
   panel size, and the museum models use a placeholder admixture fraction.
 
@@ -158,8 +174,8 @@ Calls: `results/rw_<panel>_53g/calls/` (per window and per sample).
 
 | path | contents | in git |
 |---|---|---|
-| `simulations/results/{final,museum_early,museum_late}_53g/` | thresholds, `sim_meta.json`, `fit/` | yes |
-| `results/rw_{hist_safe,museum_early,museum_late}_53g/calls/` | ArchIE calls per window and per sample | yes |
+| `simulations/results/{final,safe2,museum_early,museum_late}_53g/` | thresholds, `sim_meta.json`, `fit/` | yes |
+| `results/rw_{hist_safe,safe2,museum_early,museum_late}_53g/calls/` | ArchIE calls per window and per sample | yes |
 | `config/rw_museum_{early,late}_53g.yaml`, `simulations/config/museum_*` | museum panels | yes |
 | `results/museum_qc/` | museum distance heatmap and tables | no |
 | trained models, training/test data | `trained_model.Rdata`, `*_data.txt` | no (reproducible from configs) |
