@@ -28,7 +28,7 @@ it does not descend from the coyote/donor lineage, and negative below 30%.
 `prob` and `call_fpr*` in the output = "this window is red wolf",
 not "this window is introgressed".
 
-## Setup (once)
+## Setup
 
 ```bash
 conda env create -f envs/bcftools.yml   # env names must match conda_envs in the config
@@ -154,34 +154,15 @@ To run another panel (e.g. current red wolves), copy the config and change
 `admixed_samples`. A different number of admixed samples needs its own
 simulations and model.
 
-## Caveats
-
-- **S\* position bug (fixed 2026-10-08; regenerate older outputs).** S\* scoring removes the sites where the focal haplotype carries the ancestral allele from the genotype matrix but, upstream, not from the position list, so every later S\* score used the wrong positions. The error grows with the number of sites the focal haplotype does not carry,
-  so real S\* depended on which other genomes were in the VCF, and simulated
-  S\* on how many haplotypes were simulated. Both patches now keep positions
-  aligned. Real window features (stage 6) and trained models made before this
-  fix used the misaligned S\*; other features are unaffected. To update a run:
-
-  ```bash
-  git pull && bash archie/setup_archie.sh        # re-applies the patches (safe to re-run)
-  rm results/<experiment>/data/window_stats/chr*.stats.tsv.gz
-  sbatch --array=1-39 --export=ALL,CONFIG=config/<experiment>.yaml,STAGES=6 scripts/run_archie_real.sh
-  ```
-
-  then retrain the model (`simulations/train.sh` after re-simulating, or
-  `scripts/sim/submit_model.sh`) and re-run stage 8.
+## Notes/caveats
 
 - **Site ascertainment.** The master VCF is filtered to ≤10% missingness and
   MAF ≥ 1% across all 53 genomes, which removes most singletons. The IFS bins,
   S\* and private-SNP counts are sensitive to rare variants, and the `ms`
-  simulations are unascertained. Compared with the 63-genome run, median
-  private SNPs per window dropped 25 → 20 and S\* 18.0k → 16.2k. In
+  simulations are unascertained. In
   `simulations/`, simulating the same filter changed the fit only slightly once
   the demography was refit, so it is not applied (see `simulations/README.md`).
-- **`size_anc` is ignored by `scripts/sim/ms_templates/*.tmpl`.** They set the
-  ancestral size on pop 1 just before pop 1 joins pop 3, so the root keeps
-  size 1 × Ne (simulations with and without `size_anc` are identical). Kept as
-  is to reproduce the original analysis; `simulations/` uses the corrected model.
+- **`size_anc` is ignored by `scripts/sim/ms_templates/*.tmpl`.** (from previous run).
 - **chrX** is phased and scored like the autosomes, as in the earlier analysis.
   Males are effectively haploid there.
 
