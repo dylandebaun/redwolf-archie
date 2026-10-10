@@ -2,7 +2,7 @@
 data/
 logs/
 # results: keep only the ArchIE calls and model-fit summaries; trained models,
-# simulated training/test data, IBDmix and phasing outputs are large and
+# simulated training/test data and phasing outputs are large and
 # reproducible from the configs
 results/*
 !results/rw_*_53g/
