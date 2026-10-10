@@ -66,11 +66,14 @@ lineage. "Called" below means called red wolf.
   alleles like the canFam3.1 reference; per-window mutation-rate variation
   (Gamma(6)); no MAF ascertainment; the "derived in all focal haplotypes"
   bin dropped from the classifier.
-- **Admixture:** coyote fraction 0.48 at 19 generations before 1975 (≈ 1900,
-  4-year generations) for the historical and museum panels. 0.48 is the
-  published estimate for the historical panel and **a placeholder for the
-  museum panels**. The SAFE-only model uses 0.11, as in the earlier SAFE-only
-  analysis (`rw_safe2_11pct`), with the same timing.
+- **Admixture:** a coyote pulse at 19 generations before 1975 (≈ 1900,
+  4-year generations). Coyote fraction per panel:
+  - historical **0.48**, the published estimate;
+  - museum early **0.30** and museum late **0.40**, the fractions that fit the
+    real data best in the admixture sensitivity analysis
+    (`sensitivity/admixture/`; previously both used 0.48 as a placeholder);
+  - SAFE only **0.11**, as in the earlier SAFE-only analysis
+    (`rw_safe2_11pct`), with the same timing.
 - **SAFE-only real data:** phasing is shared with the historical panel (the 13
   historical wolves are phased alongside); only the panel split and features
   (stages 5–6) differ.
@@ -82,13 +85,14 @@ lineage. "Called" below means called red wolf.
 
 | | historical | SAFE only | museum early | museum late |
 |---|---|---|---|---|
-| model AUC (simulated test data) | 0.961 | 0.958 | 0.917 | 0.923 |
-| best F1 (threshold) | 0.900 (0.478) | 0.966 (0.468) | 0.843 (0.410) | 0.851 (0.444) |
-| threshold / recall at 5% FPR | 0.671 / 0.82 | 0.940 / 0.80 | 0.758 / 0.65 | 0.752 / 0.67 |
-| fit to real data: mean KS (7 summary features) | 0.060 | 0.119 | 0.097 | 0.073 |
-| frequency-spectrum L1 (all-derived bin dropped) | 0.166 | 0.057 | 0.096 | 0.160 |
-| adversarial AUC: summary / distance vector / all | 0.79 / 0.73 / 0.88 | 0.79 / 0.68 / 0.82 | 0.76 / 0.68 / 0.84 | 0.77 / 0.71 / 0.88 |
-| windows called red wolf (5% FPR) | 33–60% | 57–59% | 44–60% | 27–62% |
+| coyote admixture fraction | 0.48 | 0.11 | 0.30 | 0.40 |
+| model AUC (simulated test data) | 0.961 | 0.958 | 0.965 | 0.954 |
+| best F1 (threshold) | 0.900 (0.478) | 0.966 (0.468) | 0.936 (0.497) | 0.902 (0.502) |
+| threshold / recall at 5% FPR | 0.671 / 0.82 | 0.940 / 0.80 | 0.813 / 0.84 | 0.751 / 0.79 |
+| fit to real data: mean KS (7 summary features) | 0.060 | 0.119 | 0.064 | 0.058 |
+| frequency-spectrum L1 (all-derived bin dropped) | 0.166 | 0.057 | 0.094 | 0.122 |
+| adversarial AUC: summary / distance vector / all | 0.79 / 0.73 / 0.88 | 0.79 / 0.68 / 0.82 | 0.77 / 0.69 / 0.84 | 0.77 / 0.70 / 0.88 |
+| windows called red wolf (5% FPR) | 33–60% | 57–59% | 51–69% | 32–67% |
 
 Fit plots and tables: `simulations/results/<model>/fit/`.
 
@@ -114,12 +118,12 @@ Fit plots and tables: `simulations/results/<model>/fit/`.
 
 | historical | | SAFE only | | museum early | | museum late | |
 |---|---|---|---|---|---|---|---|
-| Cru792 | 0.60 | Cru792 | 0.59 | 1023 | 0.60 | 17679 | 0.62 |
-| Cru301 | 0.58 | Cru301 | 0.57 | 1022 | 0.58 | 17018 | 0.61 |
-| CL5480 | 0.57 | | | 7006 | 0.48 | 17033 | 0.52 |
-| rw75114 | 0.51 | | | 1025 | 0.48 | 20904 | 0.33 |
-| CL5487, rw76047 | 0.46 | | | 1024 | 0.44 | 13750 | 0.27 |
-| rw75157, CL5485, rw75092, rw75014 | 0.41–0.43 | | | | | 15308 | 0.27 |
+| Cru792 | 0.60 | Cru792 | 0.59 | 1022 | 0.69 | 17679 | 0.67 |
+| Cru301 | 0.58 | Cru301 | 0.57 | 1023 | 0.68 | 17018 | 0.66 |
+| CL5480 | 0.57 | | | 7006 | 0.55 | 17033 | 0.56 |
+| rw75114 | 0.51 | | | 1025 | 0.55 | 20904 | 0.38 |
+| CL5487, rw76047 | 0.46 | | | 1024 | 0.51 | 15308 | 0.32 |
+| rw75157, CL5485, rw75092, rw75014 | 0.41–0.43 | | | | | 13750 | 0.32 |
 | rw75154, rw75032, rw76046, CL5494 | 0.38–0.39 | | | | | | |
 | CL5479 | 0.33 | | | | | | |
 
@@ -134,8 +138,10 @@ Calls: `results/rw_<panel>_53g/calls/` (per window and per sample).
   haplotypes, admixture 0.11), Cru301 and Cru792 get 0.57 and 0.59; scored
   within the 15-wolf historical model (30 haplotypes, admixture 0.48), 0.58
   and 0.60.
-- **Not directly comparable across panels.** Each panel has its own model and
-  panel size, and the museum models use a placeholder admixture fraction.
+- **Not directly comparable across panels.** Each panel has its own model,
+  panel size and admixture fraction. A lower fraction calls more windows red
+  wolf: under the earlier 0.48 placeholder the museum panels had 44–60%
+  (early) and 27–62% (late) called, with the same ranking of individuals.
 
 ## 3. Museum samples: quality control and panel choice
 
@@ -158,9 +164,11 @@ Calls: `results/rw_<panel>_53g/calls/` (per window and per sample).
 
 ## 4. Open issues and next steps
 
-1. **Admixture fraction for the museum panels:** 0.48 is a placeholder; the
-   amount of called red wolf ancestry depends on it, so museum percentages
-   need a justified fraction or a sensitivity range.
+1. **Admixture fraction for the museum panels:** now set from the fit to the
+   real data (early 0.30, late 0.40). These are rough estimates (the
+   adversarial AUC is flat around them), and the amount of called red wolf
+   ancestry depends on the fraction, so museum percentages should be reported
+   with the sensitivity range (`sensitivity/admixture/summary/`).
 2. **Close the simulation–real gap:**
    - simulate the missing C>T/G>A sites (drop them after the outgroup
      recoding) and the MAF filter;
