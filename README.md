@@ -144,11 +144,6 @@ ms_templates/rw_3pop.tmpl has typical demography
 | `coyote.txt` / `coyote_bama.txt` | 4 coyotes (phasing) / ALcoy (reference panel) |
 | `wolf.txt` | AKwolf, WIwolf |
 
-Compared with the earlier 63-genome VCF, the 53-genome set no longer has
-CL13859, CL13869, CL14408 or the golden jackal / Caucasian outgroups. It adds
-samples (1022–1025, 13750, 15308, 17018, 17033, 17679, 20904, 7006, 9044, GSHP)
-that this analysis doesn't use.
-
 To run another panel (e.g. current red wolves), copy the config and change
 `experiment.name`, `out_dir`, `model_dir`, `species.redwolf` and
 `admixed_samples`. A different number of admixed samples needs its own
