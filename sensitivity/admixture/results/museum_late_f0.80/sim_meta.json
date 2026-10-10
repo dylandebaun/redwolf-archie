@@ -1,0 +1,15 @@
+{
+  "n_focal_haps": 12,
+  "n_ref_haps": 2,
+  "window_size": 50000,
+  "nreps_train": 10000,
+  "nreps_test": 1000,
+  "feature_count": 32,
+  "archaic_col": 33,
+  "not_archaic_col": 34,
+  "inbetween_col": 35,
+  "prop_archaic_col": 36,
+  "total_cols": 36,
+  "drop_all_derived_bin": 1,
+  "model_dir": "sensitivity/admixture/results/museum_late_f0.80"
+}

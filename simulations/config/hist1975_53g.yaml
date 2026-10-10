@@ -1,0 +1,48 @@
+# =============================================================================
+# hist1975_53g — as final_53g but for the 13 historical (1975) red wolves only (SAFE excluded)
+# (13 historical 1975 red wolves + 2 SAFE), matched to the real-data config
+# config/rw_hist1975_53g.yaml. See simulations/README.md for every choice.
+# Paths are relative to the repository root.
+# =============================================================================
+
+experiment:
+  name: hist1975_53g
+real_config: config/rw_hist1975_53g.yaml   # admixed/reference samples + window size come from here
+out_dir: simulations/results/hist1975_53g      # training_data.txt, test_data.txt, sim_meta.json, model
+
+sim:
+  ms_bin: archie/ArchIE/msmodified/ms
+  template: simulations/templates/rw_collapse_outgroup.tmpl
+  nreps_train: 10000
+  nreps_test: 1000
+  seed: 1                  # replicate i uses seeds derived from (seed, train/test, i)
+  workers: 8
+  N0: 60000                # ms scaling size (= coyote Ne)
+  mu: 4.0e-9               # per bp per generation (vonHoldt et al. 2016 calibration)
+  recomb_rate: 8.0e-9      # per bp per generation
+  theta_gamma_shape: 6     # per-window mutation-rate multiplier ~ Gamma(6, 1/6); 0 = constant
+
+demography:                # sizes in individuals, times in generations before present
+  admixture_fraction: 0.48 # coyote ancestry entering the red-wolf population at t_admix
+  Ne_rw_recent: 2000       # red wolf, present .. t_collapse
+  Ne_rw_hist: 15000        # red wolf, t_collapse .. t_rw_coyote
+  Ne_rwextinct: 60         # unadmixed "extinct" red-wolf ghost lineage (1 sampled hap)
+  Ne_coyote: 60000         # = N0
+  Ne_anc: 84000            # red wolf + coyote ancestor (and root after the outgroup joins)
+  Ne_outgroup: 120000      # dog/wolf lineage (1 sampled hap); vonHoldt 2016 fig. S5 model 1 theta_NA_WOLF_ANC
+  t_collapse: 100
+  t_admix: 19
+  t_rwextinct: 19
+  t_rwmerge: 24
+  t_rw_coyote: 18750
+  t_outgroup: 50000        # coyote vs wolf/dog split, ~150 kya at 3 yr/gen (fig. S5 tau_COY_ANC)
+
+polarization:              # mimic how the real data are coded
+  by_outgroup: true        # 0 = allele of the simulated outgroup hap (stand-in for the canFam3.1 boxer)
+
+features:
+  drop_all_derived_bin: true   # exclude IFS bin "derived in all n focal haps" from the classifier
+
+calibration:
+  target_fpr: [0.01, 0.02, 0.05]
+  include_inbetween: false

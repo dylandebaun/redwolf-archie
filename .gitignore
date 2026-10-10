@@ -25,3 +25,12 @@ Rplots.pdf
 # ms scratch output if run from the repo root
 out.*
 seedms
+# admixture sensitivity: keep fits, thresholds, per-sample calls and summaries;
+# trained models, simulated data, per-window calls and logs are large/reproducible
+sensitivity/*/logs/
+sensitivity/*/results/*/*
+!sensitivity/*/results/*/fit/
+!sensitivity/*/results/*/thresholds.*.tsv
+!sensitivity/*/results/*/sim_meta.json
+!sensitivity/*/results/*/calls/
+sensitivity/*/results/*/calls/*.windows.tsv.gz

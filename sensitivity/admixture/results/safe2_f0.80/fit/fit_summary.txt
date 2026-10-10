@@ -1,0 +1,21 @@
+config: sensitivity/admixture/configs/safe2_f0.80.yaml
+real: results/rw_safe2_53g/data/window_stats
+
+windows: sim 10000, real 44091 (autosomes)
+
+per-feature KS (sim median / real median):
+  min_dist_ref   KS 0.094   (7.28 / 7.681)
+  s_star         KS 0.264   (3.909e+04 / 7.029e+04)
+  private_snps   KS 0.027   (20 / 21)
+  dist_mean      KS 0.289   (5.785 / 4.664)
+  dist_var       KS 0.075   (12.19 / 11.63)
+  dist_skew      KS 0.420   (-1.073 / -0.4518)
+  dist_kurt      KS 0.247   (-0.7285 / -0.8226)
+  mean KS 0.202
+
+frequency-spectrum L1 (all-derived bin excluded): 0.129
+
+adversarial AUC (0.5 = indistinguishable; 2000 windows per side):
+  7 summary        0.804
+  distance vector  0.777
+  all features     0.874

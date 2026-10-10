@@ -1,0 +1,21 @@
+config: sensitivity/admixture/configs/historical_f0.40.yaml
+real: results/rw_hist_safe_53g/data/window_stats
+
+windows: sim 10000, real 44091 (autosomes)
+
+per-feature KS (sim median / real median):
+  min_dist_ref   KS 0.056   (7.616 / 7.55)
+  s_star         KS 0.118   (2.16e+04 / 2.78e+04)
+  private_snps   KS 0.055   (22 / 21)
+  dist_mean      KS 0.070   (6.954 / 7.183)
+  dist_var       KS 0.084   (4.255 / 3.924)
+  dist_skew      KS 0.053   (-2.076 / -2.17)
+  dist_kurt      KS 0.059   (4.345 / 4.881)
+  mean KS 0.071
+
+frequency-spectrum L1 (all-derived bin excluded): 0.140
+
+adversarial AUC (0.5 = indistinguishable; 2000 windows per side):
+  7 summary        0.812
+  distance vector  0.736
+  all features     0.888

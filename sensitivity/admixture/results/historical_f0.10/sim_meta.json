@@ -1,0 +1,15 @@
+{
+  "n_focal_haps": 30,
+  "n_ref_haps": 2,
+  "window_size": 50000,
+  "nreps_train": 10000,
+  "nreps_test": 1000,
+  "feature_count": 68,
+  "archaic_col": 69,
+  "not_archaic_col": 70,
+  "inbetween_col": 71,
+  "prop_archaic_col": 72,
+  "total_cols": 72,
+  "drop_all_derived_bin": 1,
+  "model_dir": "sensitivity/admixture/results/historical_f0.10"
+}

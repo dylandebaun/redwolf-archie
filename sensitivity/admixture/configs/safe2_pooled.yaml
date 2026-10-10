@@ -1,0 +1,42 @@
+# safe2_pooled: training/test data pooled by sensitivity/admixture/pool.py from the fixed-fraction grid
+# (equal replicate blocks per fraction). Not meant for simulate_archie.py run;
+# used by train.sh (meta) and check_fit.py.
+experiment:
+  name: safe2_pooled
+real_config: config/rw_safe2_53g.yaml
+out_dir: sensitivity/admixture/results/safe2_pooled
+sim:
+  ms_bin: archie/ArchIE/msmodified/ms
+  template: simulations/templates/rw_collapse_outgroup.tmpl
+  nreps_train: 10000
+  nreps_test: 1000
+  seed: 1
+  workers: 8
+  N0: 60000
+  mu: 4.0e-09
+  recomb_rate: 8.0e-09
+  theta_gamma_shape: 6
+demography:
+  admixture_fraction: 'pooled: 0.10, 0.20, 0.30, 0.40, 0.48, 0.60, 0.70, 0.80'
+  Ne_rw_recent: 2000
+  Ne_rw_hist: 15000
+  Ne_rwextinct: 60
+  Ne_coyote: 60000
+  Ne_anc: 84000
+  Ne_outgroup: 120000
+  t_collapse: 100
+  t_admix: 19
+  t_rwextinct: 19
+  t_rwmerge: 24
+  t_rw_coyote: 18750
+  t_outgroup: 50000
+polarization:
+  by_outgroup: true
+features:
+  drop_all_derived_bin: true
+calibration:
+  target_fpr:
+  - 0.01
+  - 0.02
+  - 0.05
+  include_inbetween: false

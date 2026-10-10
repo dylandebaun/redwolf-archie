@@ -1,0 +1,21 @@
+config: sensitivity/admixture/configs/hist1975_pooled.yaml
+real: results/rw_hist1975_53g/data/window_stats
+
+windows: sim 10000, real 44091 (autosomes)
+
+per-feature KS (sim median / real median):
+  min_dist_ref   KS 0.051   (7.55 / 7.483)
+  s_star         KS 0.069   (2.354e+04 / 2.679e+04)
+  private_snps   KS 0.044   (22 / 21)
+  dist_mean      KS 0.094   (6.868 / 7.194)
+  dist_var       KS 0.098   (4.316 / 3.992)
+  dist_skew      KS 0.050   (-2.144 / -2.246)
+  dist_kurt      KS 0.068   (4.584 / 5.281)
+  mean KS 0.068
+
+frequency-spectrum L1 (all-derived bin excluded): 0.150
+
+adversarial AUC (0.5 = indistinguishable; 2000 windows per side):
+  7 summary        0.799
+  distance vector  0.719
+  all features     0.884

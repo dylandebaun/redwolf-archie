@@ -1,0 +1,6 @@
+panel	config	real_window_stats	model_dir
+historical	sensitivity/admixture/configs/historical_pooled.yaml	results/rw_hist_safe_53g/data/window_stats	sensitivity/admixture/results/historical_pooled
+museum_early	sensitivity/admixture/configs/museum_early_pooled.yaml	results/rw_museum_early_53g/data/window_stats	sensitivity/admixture/results/museum_early_pooled
+museum_late	sensitivity/admixture/configs/museum_late_pooled.yaml	results/rw_museum_late_53g/data/window_stats	sensitivity/admixture/results/museum_late_pooled
+hist1975	sensitivity/admixture/configs/hist1975_pooled.yaml	results/rw_hist1975_53g/data/window_stats	sensitivity/admixture/results/hist1975_pooled
+safe2	sensitivity/admixture/configs/safe2_pooled.yaml	results/rw_safe2_53g/data/window_stats	sensitivity/admixture/results/safe2_pooled

@@ -1,0 +1,21 @@
+config: sensitivity/admixture/configs/museum_early_f0.10.yaml
+real: results/rw_museum_early_53g/data/window_stats
+
+windows: sim 10000, real 44091 (autosomes)
+
+per-feature KS (sim median / real median):
+  min_dist_ref   KS 0.054   (7.81 / 7.874)
+  s_star         KS 0.125   (5.473e+04 / 4.442e+04)
+  private_snps   KS 0.134   (24 / 20)
+  dist_mean      KS 0.232   (5.514 / 6.424)
+  dist_var       KS 0.107   (6.493 / 6.876)
+  dist_skew      KS 0.188   (-1.169 / -1.549)
+  dist_kurt      KS 0.180   (0.2454 / 1.388)
+  mean KS 0.146
+
+frequency-spectrum L1 (all-derived bin excluded): 0.118
+
+adversarial AUC (0.5 = indistinguishable; 2000 windows per side):
+  7 summary        0.833
+  distance vector  0.755
+  all features     0.896

@@ -1,0 +1,15 @@
+{
+  "n_focal_haps": 4,
+  "n_ref_haps": 2,
+  "window_size": 50000,
+  "nreps_train": 10000,
+  "nreps_test": 1000,
+  "feature_count": 16,
+  "archaic_col": 17,
+  "not_archaic_col": 18,
+  "inbetween_col": 19,
+  "prop_archaic_col": 20,
+  "total_cols": 20,
+  "drop_all_derived_bin": 1,
+  "model_dir": "sensitivity/admixture/results/safe2_f0.30"
+}

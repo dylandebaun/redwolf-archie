@@ -1,0 +1,15 @@
+{
+  "n_focal_haps": 26,
+  "n_ref_haps": 2,
+  "window_size": 50000,
+  "nreps_train": 10000,
+  "nreps_test": 1000,
+  "feature_count": 60,
+  "archaic_col": 61,
+  "not_archaic_col": 62,
+  "inbetween_col": 63,
+  "prop_archaic_col": 64,
+  "total_cols": 64,
+  "drop_all_derived_bin": 1,
+  "model_dir": "sensitivity/admixture/results/hist1975_f0.20"
+}

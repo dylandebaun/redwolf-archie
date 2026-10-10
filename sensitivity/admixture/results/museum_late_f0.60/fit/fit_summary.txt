@@ -1,0 +1,21 @@
+config: sensitivity/admixture/configs/museum_late_f0.60.yaml
+real: results/rw_museum_late_53g/data/window_stats
+
+windows: sim 10000, real 44091 (autosomes)
+
+per-feature KS (sim median / real median):
+  min_dist_ref   KS 0.062   (7.416 / 7.681)
+  s_star         KS 0.102   (3.198e+04 / 4.166e+04)
+  private_snps   KS 0.046   (21 / 20)
+  dist_mean      KS 0.077   (6.944 / 6.741)
+  dist_var       KS 0.077   (6.217 / 6.519)
+  dist_skew      KS 0.196   (-2.133 / -1.708)
+  dist_kurt      KS 0.195   (3.838 / 1.794)
+  mean KS 0.108
+
+frequency-spectrum L1 (all-derived bin excluded): 0.198
+
+adversarial AUC (0.5 = indistinguishable; 2000 windows per side):
+  7 summary        0.759
+  distance vector  0.729
+  all features     0.886

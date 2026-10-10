@@ -1,0 +1,2 @@
+model_source	train_rows	test_rows_total	test_rows_used	include_inbetween	n_focal_haps	feature_count	archaic_label_col	not_archaic_col	inbetween_col	auc	best_f1_threshold	best_f1_value	best_f1_precision	best_f1_recall	best_youden_threshold	best_youden_j
+loaded	260000	26000	25963	FALSE	26	59	61	62	63	0.97084443918675	0.496	0.927959501557632	0.932012254742194	0.923941841680129	0.58	0.830862898624661

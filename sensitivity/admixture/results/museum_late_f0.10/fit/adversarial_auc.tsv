@@ -1,0 +1,10 @@
+features	seed	auc
+7 summary	0	0.8832
+7 summary	1	0.8801
+7 summary	2	0.8875
+distance vector	0	0.7935
+distance vector	1	0.7797
+distance vector	2	0.7896
+all features	0	0.9323
+all features	1	0.9358
+all features	2	0.9446

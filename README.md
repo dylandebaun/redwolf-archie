@@ -141,6 +141,8 @@ ms_templates/rw_3pop.tmpl has typical demography
 | `rw1975safe.txt` | the two above combined (15) |
 | `redwolf_hybrids.txt` | 19 current Louisiana/Texas canids |
 | `rwcurrentsafe.txt` | SAFE + current (21) |
+| `museum_early.txt` | 5 museum red wolves: 1022, 1023, 1024, 1025 (1935), 7006 (1956) |
+| `museum_late.txt` | 6 museum red wolves: 13750, 15308 (1965–66), 17018, 17033, 17679 (1971–73), 20904 (1979) |
 | `coyote.txt` / `coyote_bama.txt` | 4 coyotes (phasing) / ALcoy (reference panel) |
 | `wolf.txt` | AKwolf, WIwolf |
 
