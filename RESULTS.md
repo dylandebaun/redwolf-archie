@@ -15,36 +15,15 @@ This file summarises the ArchIE runs and what they found; methods are in
 
 ## 1. Data
 
-**Master VCF:** `RedWolfProject_53genomes_geno10_maf1.vcf.gz` (PLINK 1.9
-export; ≤ 10% missingness, MAF ≥ 1% across 53 genomes). Stage 0
-(`scripts/prepare_master_vcf.sh`) makes four changes:
-
-- **Sample IDs:** PLINK `FID_IID` (`ALcoy_ALcoy`) → IID (`ALcoy`).
-- **Chromosomes:** PLINK dog codes (1–38, 39 = X) → `chr01`…`chr38`, `chrX`;
-  codes 40/41 dropped.
+**Master VCF:** `RedWolfProject_53genomes_geno10_maf1.vcf.gz`
 - **REF/ALT:** PLINK had put the minor allele in ALT at 2,556,745 of
   13,833,055 sites (18.5%). These were swapped back to the canFam3.1
   reference allele with genotypes recoded (`bcftools +fixref -m flip-all`).
   No strand flips were needed, all REF alleles match afterwards, and a spot
   check of 500 swapped sites showed every genotype mirrored. This matters
   because ArchIE reads allele `1` as derived.
-- **Damage-type sites already absent:** like the earlier 63-genome VCF, this
-  one contains no C>T or G>A sites relative to canFam3.1. That removes the
-  substitutions museum-DNA damage creates, but also about a third of all SNPs.
-  The simulations don't mimic it.
 
-**Samples relative to the earlier 63-genome VCF:**
-- **Missing:** CL13859, CL13869, CL14408 (current LA/TX), 1013 (museum) and
-  the jackal / Caucasian outgroups.
-- **Added:** 12 LSUMZ museum specimens and GSHP (German shepherd).
-
-**S\* fix:** commit `3dbfda1` corrected a position misalignment in ArchIE's S\*
-for both real data and simulations. Every result below uses the corrected
-code. The earlier 63- vs 53-genome comparison
-(`results/compare_63g_vs_53g/`) predates the fix and the new models; its
-numbers are superseded.
-
-## 2. ArchIE models and calls
+## ArchIE models and calls
 
 **What the model calls.** The simulation label is *red-wolf-major ancestry*:
 a haplotype-window is positive when > 70% of it is not from the coyote
@@ -91,28 +70,9 @@ lineage. "Called" below means called red wolf.
 | threshold / recall at 5% FPR | 0.671 / 0.82 | 0.940 / 0.80 | 0.813 / 0.84 | 0.751 / 0.79 |
 | fit to real data: mean KS (7 summary features) | 0.060 | 0.119 | 0.064 | 0.058 |
 | frequency-spectrum L1 (all-derived bin dropped) | 0.166 | 0.057 | 0.094 | 0.122 |
-| adversarial AUC: summary / distance vector / all | 0.79 / 0.73 / 0.88 | 0.79 / 0.68 / 0.82 | 0.77 / 0.69 / 0.84 | 0.77 / 0.70 / 0.88 |
 | windows called red wolf (5% FPR) | 33–60% | 57–59% | 51–69% | 32–67% |
 
 Fit plots and tables: `simulations/results/<model>/fit/`.
-
-- **Haplotype-distance shape** is the largest mismatch in every panel:
-  simulated windows have more strongly negative skew and higher kurtosis than
-  real ones.
-- **Frequency spectrum:** the real data has fewer singletons than the
-  simulations and more variants at high frequency among the focal
-  haplotypes. Two likely causes:
-  - the MAF filter and missing C>T/G>A sites, which the simulations don't
-    mimic;
-  - for the late panel, relatedness among the SAFE-like wolves.
-- **SAFE only:** the frequency spectrum fits best of the four panels, but the
-  haplotype-distance variance and skew fit worst (KS 0.16 and 0.20). With only
-  two wolves, the many near-identical haplotype pairs within each animal
-  (runs of homozygosity in the captive population) dominate those features,
-  and a random-mating model doesn't produce them. The real data also have
-  more windows with S\* near 0 than the simulations.
-- **Overall:** simulated and real windows remain distinguishable (adversarial
-  AUC 0.82–0.88), as in the README's earlier assessment.
 
 ### Called red wolf ancestry per individual (fraction of haplotype-windows, 5% FPR)
 
@@ -138,10 +98,6 @@ Calls: `results/rw_<panel>_53g/calls/` (per window and per sample).
   haplotypes, admixture 0.11), Cru301 and Cru792 get 0.57 and 0.59; scored
   within the 15-wolf historical model (30 haplotypes, admixture 0.48), 0.58
   and 0.60.
-- **Not directly comparable across panels.** Each panel has its own model,
-  panel size and admixture fraction. A lower fraction calls more windows red
-  wolf: under the earlier 0.48 placeholder the museum panels had 44–60%
-  (early) and 27–62% (late) called, with the same ranking of individuals.
 
 ## 3. Museum samples: quality control and panel choice
 
@@ -158,25 +114,6 @@ Calls: `results/rw_<panel>_53g/calls/` (per window and per sample).
   hasn't been resolved.
 - **7006 moved to the early panel.** Collected in 1956, it groups with the
   1935 wolves in both the nuclear distances and the mitogenome network.
-- **Damage:** the museum samples' transition fraction (0.529–0.540) is in the
-  range of the modern dog, wolves and coyotes, with no excess.
-- **Files:** `results/museum_qc/` (distance heatmap, tables; not tracked in git).
-
-## 4. Open issues and next steps
-
-1. **Admixture fraction for the museum panels:** now set from the fit to the
-   real data (early 0.30, late 0.40). These are rough estimates (the
-   adversarial AUC is flat around them), and the amount of called red wolf
-   ancestry depends on the fraction, so museum percentages should be reported
-   with the sensitivity range (`sensitivity/admixture/summary/`).
-2. **Close the simulation–real gap:**
-   - simulate the missing C>T/G>A sites (drop them after the outgroup
-     recoding) and the MAF filter;
-   - investigate the haplotype-distance shape mismatch.
-3. **chrX:** not modeled in the simulations (5 of the 13 historical wolves and
-   ALcoy are male).
-4. **Museum early panel:** only 5 samples (10 haplotypes), including 1022
-   with 15% missing data. Its calls are the least certain.
 
 ## 5. Files
 
